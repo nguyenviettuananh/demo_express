@@ -8,7 +8,9 @@ var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var passport = require('passport');
 var session = require('express-session');
-
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/userModel');
+require('./config/passport')(passport);
 var app = express();
 app.set('trust proxy', 1); // trust first proxy
 
@@ -43,7 +45,7 @@ app.set('views', __dirname + "/views");
 app.set('view engine', 'twig');
 var posts = require('./routes/posts')(app);
 var index = require('./routes/index')(app);
-var users = require('./routes/users')(app);
+var users = require('./routes/users')(app,passport);
 // This section is optional and can be used to configure twig.
 app.set('twig options', {
     strict_variables: false
@@ -72,7 +74,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 
 module.exports = app;
